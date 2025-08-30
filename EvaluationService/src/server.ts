@@ -5,6 +5,9 @@ import v2Router from './routers/v2/index.router';
 import { appErrorHandler, genericErrorHandler } from './middlewares/error.middleware';
 import logger from './config/logger.config';
 import { attachCorrelationIdMiddleware } from './middlewares/correlation.middleware';
+import { pullAllImages } from './utils/containers/pullimage.utils';
+import { PYTHON_IMAGE } from './utils/constants';
+import { createDockerContainer } from './utils/containers/createContainer.utils';
 const app = express();
 
 app.use(express.json());
@@ -26,7 +29,18 @@ app.use(appErrorHandler);
 app.use(genericErrorHandler);
 
 
-app.listen(serverConfig.PORT, () => {
+app.listen(serverConfig.PORT, async () => {
     logger.info(`Server is running on http://localhost:${serverConfig.PORT}`);
     logger.info(`Press Ctrl+C to stop the server.`);
+
+    await pullAllImages();
+    logger.info("All images have been pulled successfully on server start up");
+
+    const container = await createDockerContainer({
+        imageName : PYTHON_IMAGE,
+        cmdExecutable : ["echo", "hello"],
+        memoryLimit : 1024*1024*1024, // 2GB
+    });
+
+    container?.start
 });
