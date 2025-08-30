@@ -1,9 +1,10 @@
 import Redis from "ioredis";
 import logger from "./logger.config";
+import { serverConfig } from ".";
 
 const redisConfig = {
-    host: process.env.REDIS_HOST || "localhost",
-    port: Number(process.env.REDIS_PORT) || 6379,
+    host: serverConfig.REDIS_HOST || "localhost",
+    port: serverConfig.REDIS_PORT || 6379,
     maxRetriesPerRequest: null,
     retryStrategy: (times: number) => {
         if(times > 3) {

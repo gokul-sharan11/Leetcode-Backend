@@ -3,6 +3,8 @@ import { ISubmissionRepository } from "../repository/submission.repository";
 import { NotFoundError } from "../utils/errors/app.error";
 import { getProblemId } from "../apis/problem.api";
 import { addSubmissionJob } from "../producers/submission.prodcuer";
+import logger from "../config/logger.config"
+import { BadRequestError } from "../utils/errors/app.error";
 
 export interface ISubmissionService {
     createSubmission(submissionData: Partial<ISubmission>): Promise<ISubmission>;
@@ -26,17 +28,28 @@ export class SubmissionService implements ISubmissionService {
         if(!problemId){
             throw new Error("Problem id is required");
         }
+        if(!submissionData.code) {
+            throw new BadRequestError("Code is required");
+        }
+
+        if(!submissionData.language) {
+            throw new BadRequestError("Language is required");
+        }
+
         const problem = await getProblemId(problemId);
         if(!problem){
             throw new NotFoundError(`Problem with id ${problemId} not found`);
         }
+
         const submission = await this.submissionRepository.createSubmission(submissionData);
+
         const jobId = await addSubmissionJob({
             submissionId: submissionData.id,
             problem,
             code: submissionData.code,
             language: submissionData.language
         })
+        logger.info(`Submission job added: ${jobId}`);
         return submission;
         
     }
@@ -48,7 +61,7 @@ export class SubmissionService implements ISubmissionService {
         }
         return submission;
     }
-success
+    
     async findByProblemId(problemId: string): Promise<ISubmission[]> {
         const submissions = await this.submissionRepository.findByProblemId(problemId);
         return submissions;

@@ -3,10 +3,10 @@ import dotenv from 'dotenv';
 
 type ServerConfig = {
     PORT: number
-    DB_URL : string 
     REDIS_HOST : string
     REDIS_PORT : number
     PROBLEM_SERVICE_URL : string
+    SUBMISSION_SERVICE_URL : string
 }
 
 function loadEnv() {
@@ -18,8 +18,8 @@ loadEnv();
 
 export const serverConfig: ServerConfig = {
     PORT: Number(process.env.PORT) || 3001,
-    DB_URL : process.env.DB_URL || "mongodb://localhost:27017/lc_submission_db",
     REDIS_HOST : process.env.REDIS_HOST || "127.0.0.1",
     REDIS_PORT : Number(process.env.REDIS_PORT) || 6379,
-    PROBLEM_SERVICE_URL : process.env.PROBLEM_SERVICE_URL || "http://localhost:3000/api/v1"
+    PROBLEM_SERVICE_URL : process.env.PROBLEM_SERVICE_URL || "http://localhost:3000/api/v1",
+    SUBMISSION_SERVICE_URL : process.env.SUBMISSION_SERVICE_URL || "http://localhost:3000/api/v2"
 };

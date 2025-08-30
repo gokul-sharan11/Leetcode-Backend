@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema, model } from "mongoose";
+import { Document, Schema, model } from "mongoose";
 
 export enum SubmissionStatus {
     PENDING = "pending",
@@ -52,7 +52,7 @@ const submissionSchema = new Schema<ISubmission>({
         toJSON : {
             transform : (_, record) => {
                 delete (record as any).__v;
-                record._id = record._id;
+                record.id = record._id;
                 delete record._id;
                 return record;
             }

@@ -1,9 +1,9 @@
 import { SubmissionLanguage } from "../models/submission.model";
 import { IProblemDetails } from "./problems.dto";
 
-export interface ISubmission {
+export interface ISubmissionJob {
     submissionId : string;
-    problems : IProblemDetails;
+    problem : IProblemDetails;
     code : string;
     language : SubmissionLanguage;
 }

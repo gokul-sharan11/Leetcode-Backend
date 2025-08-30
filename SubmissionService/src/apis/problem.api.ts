@@ -16,7 +16,7 @@ export async function getProblemId (problemId : string) : Promise<IProblemDetail
             throw new InternalServerError("Failed to get problem details");
     }
     catch(error){
-        logger.error(`Error fetching problem details: ${error.message}`)
+        logger.error(`Error fetching problem details: ${error}`)
         return null;
     }
 
