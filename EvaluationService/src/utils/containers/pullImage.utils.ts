@@ -4,9 +4,12 @@ import { CPP_IMAGE, PYTHON_IMAGE } from "../constants";
 
 export async function pullImageUtility (image : string){
     const docker = new Docker();
-    return new Promise ((res,req) => {
+    return new Promise ((res,rej) => {
         docker.pull(image, (err : Error, stream : NodeJS.ReadableStream) => {
-            if (err) return err;
+            if (err){
+                rej(err)
+                return
+            };
 
             docker.modem.followProgress(
                 stream,

@@ -6,8 +6,7 @@ import { appErrorHandler, genericErrorHandler } from './middlewares/error.middle
 import logger from './config/logger.config';
 import { attachCorrelationIdMiddleware } from './middlewares/correlation.middleware';
 import { pullAllImages } from './utils/containers/pullImage.utils';
-import { runCode } from './utils/containers/codeRunner.utils';
-import { CPP_IMAGE, PYTHON_IMAGE } from './utils/constants';
+import { setUpEvaluationWorker } from './workers/evaluation.worker';
 const app = express();
 
 app.use(express.json());
@@ -32,39 +31,35 @@ app.use(genericErrorHandler);
 app.listen(serverConfig.PORT, async () => {
     logger.info(`Server is running on http://localhost:${serverConfig.PORT}`);
     logger.info(`Press Ctrl+C to stop the server.`);
-
+    setUpEvaluationWorker();
     await pullAllImages();
+
     logger.info("All images have been pulled successfully on server start up");
 
-    await testPythonCode();
-
-    await testCppCode();
 });
 
-async function testPythonCode(){
-    const pythonCode = `
+// async function testPythonCode(){
+//     const pythonCode = `
 
-for i in range(10):
-    print(i);
+// for i in range(10):
+//     print(i);
 
-print("Bye")
-    `;
-    await runCode({code : pythonCode, language : "python", timeout : 1000, imageName : PYTHON_IMAGE});
-}
+// print("Bye")
+//     `;
+// }
 
-async function testCppCode(){
-    const cppCode = `
-#include<iostream>
+// async function testCppCode(){
+//     const cppCode = `
+// #include<iostream>
 
-int main(){
-    std::cout<<"Hello world"<<std::endl;
+// int main(){
+//     std::cout<<"Hello world"<<std::endl;
 
-    for(int i = 0; i < 10; i++){
-        std::cout<<i<<std::endl;
-    }
+//     for(int i = 0; i < 10; i++){
+//         std::cout<<i<<std::endl;
+//     }
     
-    return 0;
-}`
+//     return 0;
+// }`
 
-    await runCode({code : cppCode, language : "cpp", timeout : 1000, imageName : CPP_IMAGE});
-}
+// }

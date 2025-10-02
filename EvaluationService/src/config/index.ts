@@ -21,5 +21,5 @@ export const serverConfig: ServerConfig = {
     REDIS_HOST : process.env.REDIS_HOST || "127.0.0.1",
     REDIS_PORT : Number(process.env.REDIS_PORT) || 6379,
     PROBLEM_SERVICE_URL : process.env.PROBLEM_SERVICE_URL || "http://localhost:3000/api/v1",
-    SUBMISSION_SERVICE_URL : process.env.SUBMISSION_SERVICE_URL || "http://localhost:3000/api/v2"
+    SUBMISSION_SERVICE_URL : process.env.SUBMISSION_SERVICE_URL || "http://localhost:3001/api/v1"
 };
