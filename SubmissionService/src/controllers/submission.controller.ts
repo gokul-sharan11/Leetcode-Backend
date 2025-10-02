@@ -66,7 +66,7 @@ export const SubmissionController = {
     
     async updateSubmissionById (req : Request, res : Response){
         const {id} = req.params;
-        const submission = await submissionService.updateStatus(id, req.body.status);
+        const submission = await submissionService.updateStatus(id, req.body.status, req.body.output);
         if(!submission){
             res.status(404).json({
                 message : "Problem not found",

@@ -8,7 +8,7 @@ const submissionRouter = express.Router();
 submissionRouter.post('/', validateRequestBody(createSubmissionSchema), SubmissionController.createSubmission)
 submissionRouter.get('/:id', SubmissionController.findSubmissionById);
 submissionRouter.get('/:id', SubmissionController.findSubmissionByProblemId)
-submissionRouter.put('/:id/status', validateRequestBody(updateSubmissionStatusSchema), SubmissionController.updateSubmissionById)
+submissionRouter.patch('/:id/status', validateRequestBody(updateSubmissionStatusSchema), SubmissionController.updateSubmissionById)
 submissionRouter.delete(
     '/:id', 
     SubmissionController.deleteSubmissionById

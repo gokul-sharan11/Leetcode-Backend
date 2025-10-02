@@ -5,19 +5,27 @@ export enum SubmissionStatus {
     COMPILING = "compiling",
     RUNNING = "running",
     ACCEPTED = "accepted",
-    FAILED = "failed"
+    FAILED = "failed",
+    COMPLETED = "completed"
 }
 
 export enum SubmissionLanguage {
     CPP = "cpp",
     PYTHON = "python"
 }
+
+export interface ISubmissionData {
+    testCaseId : string;
+    status : string
+}
+
 export interface ISubmission extends Document {
     problemId : string;
     code : string;
     userId: string;
     language : SubmissionLanguage;
     status : SubmissionStatus;
+    submissionData : ISubmissionData
     createdAt : Date;
     updatedAt : Date;
 }
@@ -45,6 +53,11 @@ const submissionSchema = new Schema<ISubmission>({
         required : true,
         enum : Object.values(SubmissionStatus),
         default : SubmissionStatus.PENDING
+    },
+    submissionData : {
+        type : Object,
+        required : true,
+        default : {}
     }
     },
     {

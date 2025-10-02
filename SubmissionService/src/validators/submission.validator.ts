@@ -1,5 +1,5 @@
 import {z} from "zod"
-import { SubmissionLanguage, SubmissionStatus} from "../models/submission.model"
+import { SubmissionLanguage} from "../models/submission.model"
 
 export const createSubmissionSchema = z.object({
     problemId: z.string().min(1, "Problem ID is required"),
@@ -12,8 +12,6 @@ export const createSubmissionSchema = z.object({
 
 // Schema for updating submission status
 export const updateSubmissionStatusSchema = z.object({
-    status: z.nativeEnum(SubmissionStatus, {
-        errorMap: () => ({ message: "Status must be one of: pending, compiling, running, accepted, wrong_answer" })
-    }),
-    submissionData: z.any()
+    status: z.any(),
+    output: z.any()
 });

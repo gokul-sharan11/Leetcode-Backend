@@ -5,13 +5,16 @@ import { getProblemId } from "../apis/problem.api";
 import { addSubmissionJob } from "../producers/submission.prodcuer";
 import logger from "../config/logger.config"
 import { BadRequestError } from "../utils/errors/app.error";
+import { ISubmissionData } from "../models/submission.model";
+
 
 export interface ISubmissionService {
     createSubmission(submissionData: Partial<ISubmission>): Promise<ISubmission>;
     findById(submissionId: string): Promise<ISubmission | null>;
     findByProblemId(problemId: string): Promise<ISubmission[]>;
     deleteById(submissionId: string): Promise<boolean>;
-    updateStatus(submissionId: string, status: ISubmission['status']): Promise<ISubmission | null>;
+    updateStatus(submissionId: string, status: ISubmission['status'], output: ISubmissionData
+    ): Promise<ISubmission | null>;
 }
 
 export class SubmissionService implements ISubmissionService {
@@ -40,11 +43,13 @@ export class SubmissionService implements ISubmissionService {
         if(!problem){
             throw new NotFoundError(`Problem with id ${problemId} not found`);
         }
-
+        
         const submission = await this.submissionRepository.createSubmission(submissionData);
+        console.log("Submission created");
+        console.log(submission.id);
 
         const jobId = await addSubmissionJob({
-            submissionId: submissionData.id,
+            submissionId: submission.id,
             problem,
             code: submissionData.code,
             language: submissionData.language
@@ -75,8 +80,8 @@ export class SubmissionService implements ISubmissionService {
         return deleted;
     }
 
-    async updateStatus(submissionId: string, status: ISubmission['status']): Promise<ISubmission | null> {
-        const submission = await this.submissionRepository.updateStatus(submissionId, status);
+    async updateStatus(submissionId: string, status: ISubmission['status'], output: ISubmissionData): Promise<ISubmission | null> {
+        const submission = await this.submissionRepository.updateStatus(submissionId, status, output);
         if(!submission){
             throw new NotFoundError(`Submission with id ${submissionId} not found`);
         }
